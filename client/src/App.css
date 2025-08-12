@@ -1,38 +1,152 @@
-.App {
-  text-align: center;
+/* App.css */
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  margin: 0;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  color: #fff;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.App-link {
-  color: #61dafb;
+.app {
+  background: rgba(30, 30, 45, 0.85);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    inset 0 0 60px rgba(255, 255, 255, 0.05);
+  width: 100%;
+  max-width: 460px;
+  padding: 40px 35px 50px;
+  text-align: center;
+  position: relative;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Heading */
+h1 {
+  font-weight: 800;
+  font-size: 2.25rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.5rem;
+  color: #ff5f6d;
+  background: linear-gradient(45deg, #ff5f6d, #ffc371);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  user-select: none;
+  text-shadow: 0 2px 8px rgba(255, 95, 109, 0.5);
+}
+
+/* Input & Select */
+input[type="text"],
+select {
+  width: 100%;
+  padding: 15px 18px;
+  margin-bottom: 24px;
+  border-radius: 14px;
+  border: none;
+  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #eee;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1);
+  outline-offset: 4px;
+  outline-color: #ff5f6d;
+  cursor: text;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  user-select: text;
+}
+
+input::placeholder {
+  color: #d1d1d1aa;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+input:focus,
+select:focus {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 0 8px 2px #ff5f6d,
+    inset 0 0 12px rgba(255, 95, 109, 0.5);
+  outline: none;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 16px 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  color: #1e1e2f;
+  cursor: pointer;
+  box-shadow:
+    0 6px 15px rgba(255, 95, 109, 0.6);
+  user-select: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition:
+    background 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.2s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #ff2a44, #ffb347);
+  box-shadow:
+    0 10px 25px rgba(255, 42, 68, 0.8);
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
+  box-shadow: 0 5px 10px rgba(255, 42, 68, 0.6);
+}
+
+/* Status text */
+p {
+  margin-top: 28px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #ffc371;
+  min-height: 1.6em;
+  user-select: none;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 6px rgba(255, 195, 113, 0.5);
+}
+
+p span.progress {
+  font-weight: 900;
+  color: #ff5f6d;
+  text-shadow: 0 2px 8px rgba(255, 95, 109, 0.75);
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .app {
+    padding: 30px 25px 40px;
+    border-radius: 16px;
   }
-  to {
-    transform: rotate(360deg);
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  button {
+    font-size: 1.1rem;
   }
 }
