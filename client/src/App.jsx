@@ -12,7 +12,7 @@ const CustomDropdown = ({ label, value, onChange, options, disabled }) => {
       >
         <span>{options.find(o => o.value === value)?.label || 'Select'}</span>
         <svg className="w-5 h-5 text-gray-300 ml-2" fill="none" stroke="currentColor" strokeWidth="2"
-             viewBox="0 0 24 24">
+          viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </div>
@@ -26,9 +26,8 @@ const CustomDropdown = ({ label, value, onChange, options, disabled }) => {
                 onChange(option.value);
                 setOpen(false);
               }}
-              className={`px-4 py-2 hover:bg-pink-500 transition-all cursor-pointer ${
-                value === option.value ? 'bg-pink-600 text-white' : 'text-white'
-              }`}
+              className={`px-4 py-2 hover:bg-pink-500 transition-all cursor-pointer ${value === option.value ? 'bg-pink-600 text-white' : 'text-white'
+                }`}
             >
               {option.label}
             </li>
@@ -127,6 +126,18 @@ function App() {
     }
   };
 
+  const handleCancel = () => {
+    window.location.reload(); // Simply refresh the page
+  };
+
+  const handleresume = () => {
+    alert("▶️ Resume is not supported yet."); // Placeholder
+  };
+
+  const handlePause = () => {
+    alert("⏸️ Pause is not supported yet."); // Placeholder
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-tr from-purple-900 via-indigo-900 to-gray-900 flex items-start justify-center pt-20 px-6">
       <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-3xl shadow-xl max-w-xl w-full p-10 text-white">
@@ -149,54 +160,63 @@ function App() {
             htmlFor="url"
             className="absolute text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 origin-[0] peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-pink-500"
           >
-            YouTube URL
+            Enter URL
           </label>
         </div>
 
-        {/* Type select */}
-        <CustomDropdown
-          label="Download Type"
-          value={type}
-          onChange={setType}
-          options={[
-            { value: 'video', label: '🎥 Video' },
-            { value: 'audio', label: '🎧 Audio' }
-          ]}
-        />
-
-        {/* Resolution select */}
-        <CustomDropdown
-          label="Resolution"
-          value={resolution}
-          onChange={setResolution}
-          disabled={type === 'audio'}
-          options={[
-            { value: '', label: '🌟 Best Available' },
-            { value: '1080', label: '1080p' },
-            { value: '720', label: '720p' },
-            { value: '480', label: '480p' },
-            { value: '360', label: '360p' },
-          ]}
-        />
-
-        {/* Filename input */}
-         {/* <div className="relative z-0 w-full mb-8 group">
-          <input
-            type="text"
-            id="filename"
-            value={filename}
-            onChange={e => setFilename(e.target.value)}
-            placeholder=" "
-            className="block py-3 px-4 w-full text-white bg-transparent border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-pink-500 peer"
-            autoComplete="off"
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
+          {/* Type select */}
+          <CustomDropdown
+            label="Download Type"
+            value={type}
+            onChange={setType}
+            options={[
+              { value: 'video', label: '🎥 Video' },
+              { value: 'audio', label: '🎧 Audio' }
+            ]}
           />
-          <label
-            htmlFor="filename"
-            className="absolute text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 left-4 origin-[0] peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-pink-500"
+
+          {/* Resolution select */}
+          <CustomDropdown
+            label="Resolution"
+            value={resolution}
+            onChange={setResolution}
+            disabled={type === 'audio'}
+            options={[
+              { value: '', label: '🌟 Best Available' },
+              { value: '1080', label: '1080p' },
+              { value: '720', label: '720p' },
+              { value: '480', label: '480p' },
+              { value: '360', label: '360p' },
+            ]}
+          />
+        </div>
+
+        {/* Pause and Cancel buttons */}
+        <div className="flex justify-between mb-6">
+          <button
+            onClick={handlePause}
+            className="flex-1 mr-2 py-2 bg-yellow-300 hover:bg-yellow-500 text-gray-900 font-bold rounded-full transition-transform active:scale-95 disabled:opacity-70"
+            // disabled
           >
-            Custom filename (optional)
-          </label>
-        </div> */}
+            ⏸️ Pause
+          </button>
+
+          <button
+            onClick={handleresume}
+            // disabled={!downloadId || downloadStatus !== 'paused'}
+            className="flex-1 py-2 bg-green-400 hover:bg-green-500 text-gray-900 font-bold rounded-full transition-transform active:scale-95 disabled:opacity-70"
+          >
+            ▶️ Resume
+          </button>
+
+          <button
+            onClick={handleCancel}
+            className="flex-1 ml-2 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-full transition-transform active:scale-95"
+          >
+            ❌ Cancel
+          </button>
+        </div>
 
         {/* Download button */}
         <button

@@ -14,7 +14,7 @@ CORS(app)
 
 progress_dict = {}
 
-# Temp downloads directory (will auto-delete files after sending)
+# Directory to temporarily store downloads
 DOWNLOAD_DIR = os.path.join(os.path.dirname(__file__), 'downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
@@ -54,7 +54,7 @@ def fetch_file(download_id):
         return jsonify({'error': 'Download not complete'}), 400
 
     path = info.get('path')
-    custom_name = info.get('custom_name')
+    download_name = info.get('custom_name') or os.path.basename(path)
 
     if not path or not os.path.exists(path):
         return jsonify({'error': 'File not found'}), 500
@@ -64,13 +64,13 @@ def fetch_file(download_id):
         try:
             os.remove(path)
         except Exception as e:
-            print(f"Failed to delete file: {e}")
+            print(f"Cleanup error: {e}")
         return response
 
     return send_file(
         path,
         as_attachment=True,
-        download_name=custom_name or os.path.basename(path)
+        download_name=download_name
     )
 
 
@@ -78,21 +78,15 @@ def download_and_store(download_id, url, download_type, resolution, filename):
     try:
         progress_dict[download_id]['status'] = 'downloading'
 
-        # Use a safe custom filename or fallback
-        if filename:
-            base_name = secure_filename(filename)
-        else:
-            base_name = 'youtube_download'
-
-        # Set extension based on type
+        # Use a safe filename or fallback
+        safe_name = secure_filename(filename) if filename else 'youtube_download'
         ext = 'mp3' if download_type == 'audio' else 'mp4'
-        final_name = f"{base_name}.{ext}"
+        download_name = f"{safe_name}.{ext}"  # used only for browser download
 
-        # Output path template
+        # Save file on disk with unique UUID to avoid conflicts
         final_path = os.path.join(DOWNLOAD_DIR, f"{download_id}.{ext}")
         output_template = os.path.join(DOWNLOAD_DIR, f"{download_id}.%(ext)s")
 
-        # yt-dlp options
         ydl_opts = {
             'format': (
                 f"bestvideo[height<={resolution}]+bestaudio/best"
@@ -101,7 +95,7 @@ def download_and_store(download_id, url, download_type, resolution, filename):
                 else "bestvideo+bestaudio/best"
             ),
             'outtmpl': output_template,
-            'merge_output_format': 'mp4' if download_type == 'video' else None,
+            'merge_output_format': ext,
             'quiet': True,
             'progress_hooks': [lambda d: progress_hook(download_id, d)],
         }
@@ -110,15 +104,15 @@ def download_and_store(download_id, url, download_type, resolution, filename):
             ydl_opts['postprocessors'] = [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
-                'preferredquality': '192'
+                'preferredquality': '192',
             }]
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
 
-        # Rename the downloaded file to consistent final name
+        # Rename to consistent file name (UUID-based)
         for f in os.listdir(DOWNLOAD_DIR):
-            if f.startswith(download_id) and (f.endswith('.mp4') or f.endswith('.mp3')):
+            if f.startswith(download_id) and f.endswith(f".{ext}"):
                 os.rename(os.path.join(DOWNLOAD_DIR, f), final_path)
                 break
         else:
@@ -129,7 +123,7 @@ def download_and_store(download_id, url, download_type, resolution, filename):
             'status': 'completed',
             'progress': 100,
             'path': final_path,
-            'custom_name': final_name
+            'custom_name': download_name
         })
 
     except Exception as e:
