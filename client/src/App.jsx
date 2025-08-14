@@ -63,6 +63,7 @@ function App() {
 
             const fileRes = await fetch(`${process.env.REACT_APP_API_URL}/file/${downloadId}`);
             if (!fileRes.ok) {
+              console.log("Error fetching file:", fileRes.statusText);
               setStatus("❌ Error fetching file");
               return;
             }
@@ -86,11 +87,13 @@ function App() {
 
           if (data.status === 'error') {
             clearInterval(interval);
+            console.log(`❌ Error: ${data.error}`);
             setStatus(`❌ Error: ${data.error}`);
           }
         } catch (error) {
           console.error(error);
           setStatus("❌ Error tracking progress.");
+          console.log("❌ Error tracking progress.");
         }
       }, 1000);
     }
@@ -120,9 +123,11 @@ function App() {
         setDownloadId(result.id);
       } else {
         setStatus(`❌ Error: ${result.error || "Unknown error"}`);
+        console.log(`❌ Error: ${result.error || "Unknown error"}`);
       }
     } catch (err) {
       setStatus(`❌ Network error: ${err.message}`);
+      console.log(`❌ Network error: ${err.message}`);
     }
   };
 

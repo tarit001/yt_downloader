@@ -3,3 +3,4 @@ yt-dlp
 flask-cors
 python-dotenv
 ffmpeg
+browser-cookie3
